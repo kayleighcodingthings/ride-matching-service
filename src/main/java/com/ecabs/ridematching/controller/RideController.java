@@ -4,6 +4,7 @@ import com.ecabs.ridematching.domain.Location;
 import com.ecabs.ridematching.domain.Ride;
 import com.ecabs.ridematching.service.RideMatchingService;
 import com.ecabs.ridematching.controller.Dtos.*;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,9 +25,11 @@ public class RideController {
      */
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public RideResponse requestRide(AllocateRideRequest request) {
+    public RideResponse requestRide(@Valid @RequestBody AllocateRideRequest request) {
         Ride ride = rideMatchingService.requestRide(
-                new Location(request.pickupLocation().latitude(), request.pickupLocation().longitude())
+                new Location(
+                        request.getPickupLocation().getLatitude(),
+                        request.getPickupLocation().getLongitude())
         );
 
         return toResponse(ride);

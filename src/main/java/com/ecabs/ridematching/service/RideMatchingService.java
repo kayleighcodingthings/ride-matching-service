@@ -82,14 +82,14 @@ public class RideMatchingService {
                 return rideStore.save(ride);
             }
         }
-        throw new NoDriverAvailableException(pickupLocation);
+        throw new NoDriverAvailableException("No drivers are currently available for pickup at " + pickupLocation);
     }
 
     /**
      * Marks a ride as completed and releases its driver back to the available pool.
      *
-     * @throws RideNotFoundException  if no ride exists with the given ID
-     * @throws IllegalStateException  if the ride is already completed
+     * @throws RideNotFoundException if no ride exists with the given ID
+     * @throws IllegalStateException if the ride is already completed
      */
     public Ride completeRide(UUID rideId) {
         Ride ride = rideStore.findById(rideId).orElseThrow(() -> new RideNotFoundException(rideId));

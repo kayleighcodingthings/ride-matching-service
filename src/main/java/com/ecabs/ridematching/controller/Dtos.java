@@ -13,29 +13,52 @@ public final class Dtos {
     }
 
     // --- Shared ---
-    public record LocationDto(
-            @NotNull(message = "Latitude is required") Double latitude,
-            @NotNull(message = "Longitude is required") Double longitude
-    ) {
+
+    public static class LocationDto {
+        @NotNull(message = "Latitude is required") private Double latitude;
+        @NotNull(message = "Longitude is required") private Double longitude;
+
+        public LocationDto() {}
+
+        public Double getLatitude() { return latitude; }
+        public void setLatitude(Double latitude) { this.latitude = latitude; }
+        public Double getLongitude() { return longitude; }
+        public void setLongitude(Double longitude) { this.longitude = longitude; }
     }
 
     // --- Request DTOs ---
 
-    public record RegisterDriverRequest(
-            @NotBlank(message = "Driver name is required") String name,
-            @NotNull(message = "location is required") @Valid LocationDto location
-    ) {
+    public static class RegisterDriverRequest {
+        @NotBlank(message = "Driver name is required") private String name;
+        @NotNull(message = "Location is required") @Valid private LocationDto location;
+
+        public RegisterDriverRequest() {}
+
+        public String getName() { return name; }
+        public void setName(String name) { this.name = name; }
+        public LocationDto getLocation() { return location; }
+        public void setLocation(LocationDto location) { this.location = location; }
     }
 
-    public record UpdateDriverRequest(
-            @NotNull(message = "location is required") @Valid LocationDto location,
-            boolean available
-    ) {
+    public static class UpdateDriverRequest {
+        @NotNull(message = "Location is required") @Valid private LocationDto location;
+        private boolean available;
+
+        public UpdateDriverRequest() {}
+
+        public LocationDto getLocation() { return location; }
+        public void setLocation(LocationDto location) { this.location = location; }
+        public boolean isAvailable() { return available; }
+        public void setAvailable(boolean available) { this.available = available; }
     }
 
-    public record AllocateRideRequest(
-            @NotNull(message = "pickupLocation is required") @Valid LocationDto pickupLocation
-    ) {
+    public static class AllocateRideRequest {
+        @NotNull(message = "pickupLocation is required") @Valid private LocationDto pickupLocation;
+
+        public AllocateRideRequest() {}
+
+        public LocationDto getPickupLocation() { return pickupLocation; }
+        public void setPickupLocation(LocationDto pickupLocation) { this.pickupLocation = pickupLocation; }
     }
 
     // --- Response DTOs ---
