@@ -8,6 +8,12 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.net.URI;
 
+/**
+ * Centralized exception handler - maps domain exceptions to appropriate HTTP status codes and RFC 7807 ProblemDetail
+ * responses.
+ *
+ * <p>Using ProblemDetail (Spring 6 / Boot 3) is idiomatic and gives a consistent structure for error responses.
+ */
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
