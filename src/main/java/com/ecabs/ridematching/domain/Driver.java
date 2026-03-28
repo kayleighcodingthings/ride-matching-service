@@ -1,5 +1,7 @@
 package com.ecabs.ridematching.domain;
 
+import com.ecabs.ridematching.store.DriverStore;
+
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -9,7 +11,7 @@ import java.util.concurrent.atomic.AtomicReference;
  * <p>Status transitions are managed via an {@link AtomicReference} to ensure thread-safe compare-and-set semantics,
  * preventing double-allocation of the same driver across concurrent ride requests without requiring external locks.
  *
- * <p>Location updates are guarded by a dedicated lock in {@link com.ridematching.store.DriverStore}.
+ * <p>Location updates are guarded by a dedicated lock in {@link DriverStore}.
  */
 
 public class Driver {
