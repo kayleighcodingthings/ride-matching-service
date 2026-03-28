@@ -13,6 +13,9 @@ import java.util.concurrent.ConcurrentHashMap;
  *
  * <p>Read operations are non-blocking thanks to {@link ConcurrentHashMap}'s segment level-locking. Write operations are safe
  * because the map guarantees atomicity at the key level, and {@link Driver} guards its own mutable fields.
+ *
+ * <p>If persistence is introduced, extract a DriverRepository interface and provide a database-backed implementation
+ * alongside this one.
  */
 @Repository
 public class DriverStore {

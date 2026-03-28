@@ -10,6 +10,9 @@ import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Thread-safe in-memory store for {@link Ride}.
+ *
+ * <p>If persistence is introduced, extract a DriverRepository interface and provide a database-backed implementation
+ * alongside this one.
  */
 @Repository
 public class RideStore {

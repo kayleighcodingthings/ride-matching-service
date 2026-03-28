@@ -9,7 +9,7 @@ import java.util.UUID;
 public class Ride {
     private final UUID id;
     private final Driver driver;
-    private final Location location;
+    private final Location pickupLocation;
     private final Instant createdAt;
     private volatile RideStatus status;
     private volatile Instant completedAt;
@@ -17,7 +17,7 @@ public class Ride {
     public Ride(Driver driver, Location pickupLocation) {
         this.id = UUID.randomUUID();
         this.driver = driver;
-        this.location = pickupLocation;
+        this.pickupLocation = pickupLocation;
         this.createdAt = Instant.now();
         this.status = RideStatus.ACTIVE;
     }
@@ -45,8 +45,8 @@ public class Ride {
         return driver;
     }
 
-    public Location getLocation() {
-        return location;
+    public Location getPickupLocation() {
+        return pickupLocation;
     }
 
     public Instant getCreatedAt() {
