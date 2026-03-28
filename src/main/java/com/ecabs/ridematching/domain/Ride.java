@@ -28,7 +28,7 @@ public class Ride {
      * @throws IllegalStateException if the ride is already completed
      */
     public synchronized void complete() {
-        if (status != RideStatus.COMPLETED) {
+        if (status == RideStatus.COMPLETED) {
             throw new IllegalStateException("Ride " + id + " is already completed.");
         }
 
