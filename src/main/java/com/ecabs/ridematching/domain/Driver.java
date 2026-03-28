@@ -6,14 +6,10 @@ import java.util.concurrent.atomic.AtomicReference;
 /**
  * Represents a driver registered in the system.
  *
- * <p>
- * Status transitions are managed via an {@link AtomicReference} to ensure thread-safe compare-and-set semantics,
+ * <p>Status transitions are managed via an {@link AtomicReference} to ensure thread-safe compare-and-set semantics,
  * preventing double-allocation of the same driver across concurrent ride requests without requiring external locks.
- * </p>
  *
- * <p>
- * Location updates are guarded by a dedicated lock in {@link com.ridematching.store.DriverStore}.
- * </p>
+ * <p>Location updates are guarded by a dedicated lock in {@link com.ridematching.store.DriverStore}.
  */
 
 public class Driver {
@@ -33,8 +29,8 @@ public class Driver {
     /**
      * Attempts to transition this driver from AVAILABLE to BUSY atomically.
      *
-     * @return  {@code true} if the transition was successful, the driver was AVAILABLE and is now BUSY,
-     *          {@code false} if the transition failed, the driver was already BUSY
+     * @return {@code true} if the transition was successful, the driver was AVAILABLE and is now BUSY,
+     * {@code false} if the transition failed, the driver was already BUSY
      */
     public boolean tryAllocateDriver() {
         return status.compareAndSet(DriverStatus.AVAILABLE, DriverStatus.BUSY);
