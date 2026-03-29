@@ -140,8 +140,21 @@ curl -s -X PATCH http://localhost:8080/rides/{rideId}/complete | jq
 {
   "id": "a1b2c3d4-...",
   "status": "COMPLETED",
-  "completedAt": "2024-01-15T10:45:00Z",
-  ...
+  "pickupLocation": {
+    "latitude": 51.508,
+    "longitude": -0.128
+  },
+  "driver": {
+    "id": "b3f1c2d4-...",
+    "name": "Alice",
+    "location": {
+      "latitude": 51.5074,
+      "longitude": -0.1278
+    },
+    "status": "AVAILABLE"
+  },
+  "createdAt": "2024-01-15T10:30:00Z",
+  "completedAt": "2024-01-15T10:45:00Z"
 }
 ```
 
@@ -200,8 +213,6 @@ curl -s -X PATCH $BASE/rides/$RIDE_ID/complete | jq '{status, completedAt}'
 # 6. Alice is available again
 curl -s "$BASE/drivers/nearby?lat=51.505&lng=-0.125&limit=5" | jq '[.[] | {name, status}]'
 ```
-
----
 
 ---
 
