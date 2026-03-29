@@ -22,14 +22,14 @@ class DriverStoreTest {
     @Test
     @DisplayName("saves and retrieves a driver by ID")
     void savesAndRetrievesDriver() {
-        Driver driver = new Driver("John", new Location(1.0, 2.0));
+        Driver driver = new Driver("Alice", new Location(1.0, 2.0));
         driverStore.save(driver);
 
         assertThat(driverStore.findById(driver.getId()))
                 .isPresent()
                 .get()
                 .extracting(Driver::getName)
-                .isEqualTo("John");
+                .isEqualTo("Alice");
     }
 
     @Test
@@ -41,7 +41,7 @@ class DriverStoreTest {
     @Test
     @DisplayName("findAll returns all saved drivers")
     void findAllReturnsAllDrivers() {
-        driverStore.save(new Driver("John", new Location(1.0, 2.0)));
+        driverStore.save(new Driver("Alice", new Location(1.0, 2.0)));
         driverStore.save(new Driver("Bob", new Location(3.0, 4.0)));
 
         assertThat(driverStore.findAll()).hasSize(2);
@@ -50,7 +50,7 @@ class DriverStoreTest {
     @Test
     @DisplayName("overwrites a driver ID replaces the entry")
     void overwriteReplacesDriverId() {
-        Driver original = new Driver("John", new Location(1.0, 2.0));
+        Driver original = new Driver("Alice", new Location(1.0, 2.0));
         driverStore.save(original);
 
         // Directly overwrite using same ID reference

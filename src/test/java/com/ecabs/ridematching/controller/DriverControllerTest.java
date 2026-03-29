@@ -38,7 +38,7 @@ class DriverControllerTest {
 
     @BeforeEach
     void setUp() {
-        driver = new Driver("John", new Location(51.50, -0.12));
+        driver = new Driver("Alice", new Location(51.50, -0.12));
     }
 
     @Nested
@@ -47,14 +47,14 @@ class DriverControllerTest {
         @Test
         @DisplayName("returns 201 with driver details on success")
         void returns201OnSuccess() throws Exception {
-            when(rideMatchingService.registerDriver(eq("John"), any(Location.class)))
+            when(rideMatchingService.registerDriver(eq("Alice"), any(Location.class)))
                     .thenReturn(driver);
 
             mockMvc.perform(post("/drivers")
                             .contentType(MediaType.APPLICATION_JSON)
                             .content("""
                                     {
-                                      "name": "John",
+                                      "name": "Alice",
                                       "location": {
                                         "latitude": 51.50,
                                         "longitude": -0.12
@@ -62,7 +62,7 @@ class DriverControllerTest {
                                     }
                                     """))
                     .andExpect(status().isCreated())
-                    .andExpect(jsonPath("$.name").value("John"))
+                    .andExpect(jsonPath("$.name").value("Alice"))
                     .andExpect(jsonPath("$.status").value("AVAILABLE"))
                     .andExpect(jsonPath("$.location.latitude").value(51.50))
                     .andExpect(jsonPath("$.location.longitude").value(-0.12));
@@ -87,7 +87,7 @@ class DriverControllerTest {
             mockMvc.perform(post("/drivers")
                             .contentType(MediaType.APPLICATION_JSON)
                             .content("""
-                                    { "name": "John" }
+                                    { "name": "Alice" }
                                     """))
                     .andExpect(status().isBadRequest());
         }
@@ -99,7 +99,7 @@ class DriverControllerTest {
                             .contentType(MediaType.APPLICATION_JSON)
                             .content("""
                                     {
-                                      "name": "John",
+                                      "name": "Alice",
                                       "location": { "longitude": -0.12 }
                                     }
                                     """))
@@ -128,7 +128,7 @@ class DriverControllerTest {
                                     }
                                     """))
                     .andExpect(status().isOk())
-                    .andExpect(jsonPath("$.name").value("John"));
+                    .andExpect(jsonPath("$.name").value("Alice"));
         }
 
         @Test
@@ -175,12 +175,12 @@ class DriverControllerTest {
                     .thenReturn(List.of(driver, driver2));
 
             mockMvc.perform(get("/drivers/nearby")
-                            .param("lat", "51.505")
-                            .param("lng", "-0.125")
+                            .param("latitude", "51.505")
+                            .param("longitude", "-0.125")
                             .param("count", "2"))
                     .andExpect(status().isOk())
                     .andExpect(jsonPath("$.length()").value(2))
-                    .andExpect(jsonPath("$[0].name").value("John"))
+                    .andExpect(jsonPath("$[0].name").value("Alice"))
                     .andExpect(jsonPath("$[1].name").value("Bob"));
         }
 
@@ -188,8 +188,8 @@ class DriverControllerTest {
         @DisplayName("returns 400 when count is missing")
         void returns400WhenCountMissing() throws Exception {
             mockMvc.perform(get("/drivers/nearby")
-                            .param("lat", "51.505")
-                            .param("lng", "-0.125"))
+                            .param("latitude", "51.505")
+                            .param("longitude", "-0.125"))
                     .andExpect(status().isBadRequest());
         }
 
@@ -197,8 +197,8 @@ class DriverControllerTest {
         @DisplayName("returns 400 when count is less than 1")
         void returns400WhenCountBelowMinimum() throws Exception {
             mockMvc.perform(get("/drivers/nearby")
-                            .param("lat", "51.505")
-                            .param("lng", "-0.125")
+                            .param("latitude", "51.505")
+                            .param("longitude", "-0.125")
                             .param("count", "0"))
                     .andExpect(status().isBadRequest());
         }
@@ -210,8 +210,8 @@ class DriverControllerTest {
                     .thenReturn(List.of());
 
             mockMvc.perform(get("/drivers/nearby")
-                            .param("lat", "51.505")
-                            .param("lng", "-0.125")
+                            .param("latitude", "51.505")
+                            .param("longitude", "-0.125")
                             .param("count", "5"))
                     .andExpect(status().isOk())
                     .andExpect(jsonPath("$.length()").value(0));

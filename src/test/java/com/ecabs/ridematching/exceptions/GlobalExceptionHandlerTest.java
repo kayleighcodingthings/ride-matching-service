@@ -96,8 +96,8 @@ class GlobalExceptionHandlerTest {
         @DisplayName("returns 400 with field detail when @RequestParam field fails @Min")
         void returns400WithFieldDetailOnMin() throws Exception {
             mockMvc.perform(get("/drivers/nearby")
-                            .param("lat", "0")
-                            .param("lng", "0")
+                            .param("latitude", "0")
+                            .param("longitude", "0")
                             .param("count", "0"))
                     .andExpect(status().isBadRequest())
                     .andExpect(jsonPath("$.title").value("Validation Error"))
@@ -108,8 +108,8 @@ class GlobalExceptionHandlerTest {
         @DisplayName("returns 400 when count is negative")
         void returns400WithFieldDetailOnNegativeCount() throws Exception {
             mockMvc.perform(get("/drivers/nearby")
-                            .param("lat", "0")
-                            .param("lng", "0")
+                            .param("latitude", "0")
+                            .param("longitude", "0")
                             .param("count", "-1"))
                     .andExpect(status().isBadRequest())
                     .andExpect(jsonPath("$.title").value("Validation Error"))
@@ -128,22 +128,22 @@ class GlobalExceptionHandlerTest {
         @DisplayName("returns 400 with field detail when required @RequestParam count is missing")
         void returns400WhenCountMissing() throws Exception {
             mockMvc.perform(get("/drivers/nearby")
-                            .param("lat", "0")
-                            .param("lng", "0"))
+                            .param("latitude", "0")
+                            .param("longitude", "0"))
                     .andExpect(status().isBadRequest())
                     .andExpect(jsonPath("$.title").value("Validation Error"))
                     .andExpect(jsonPath("$.detail").value("Required parameter 'count' is missing"));
         }
 
         @Test
-        @DisplayName("returns 400 with field detail when required @RequestParam lat is missing")
+        @DisplayName("returns 400 with field detail when required @RequestParam latitude is missing")
         void returns400WhenLatMissing() throws Exception {
             mockMvc.perform(get("/drivers/nearby")
-                            .param("lng", "0")
+                            .param("longitude", "0")
                             .param("count", "-1"))
                     .andExpect(status().isBadRequest())
                     .andExpect(jsonPath("$.title").value("Validation Error"))
-                    .andExpect(jsonPath("$.detail").value("Required parameter 'lat' is missing"));
+                    .andExpect(jsonPath("$.detail").value("Required parameter 'latitude' is missing"));
         }
     }
 

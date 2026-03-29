@@ -119,7 +119,7 @@ class ConcurrentAllocateRideRequestTest {
     @RepeatedTest(5)
     @DisplayName("driver status is consistent across concurrent complete-and-request cycles")
     void driverStatusConsistentAcrossCompletionCycles() throws InterruptedException {
-        rideMatchingService.registerDriver("John", new Location(0, 0));
+        rideMatchingService.registerDriver("Alice", new Location(0, 0));
 
         int cycles = 20;
         AtomicInteger successCount = new AtomicInteger(0);

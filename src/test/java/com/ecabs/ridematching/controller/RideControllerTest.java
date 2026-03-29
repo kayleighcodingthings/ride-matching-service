@@ -40,7 +40,7 @@ class RideControllerTest {
 
     @BeforeEach
     void setUp() {
-        driver = new Driver("John", new Location(51.50, -0.12));
+        driver = new Driver("Alice", new Location(51.50, -0.12));
         driver.tryAllocateDriver(); // Driver is BUSY once assigned to a ride
         ride = new Ride(driver, new Location(51.505, -0.125));
     }
@@ -67,7 +67,7 @@ class RideControllerTest {
                                     """))
                     .andExpect(status().isCreated())
                     .andExpect(jsonPath("$.status").value("ACTIVE"))
-                    .andExpect(jsonPath("$.driver.name").value("John"))
+                    .andExpect(jsonPath("$.driver.name").value("Alice"))
                     .andExpect(jsonPath("$.driver.status").value("BUSY"))
                     .andExpect(jsonPath("$.pickupLocation.latitude").value(51.505))
                     .andExpect(jsonPath("$.completedAt").value(org.hamcrest.Matchers.nullValue()));

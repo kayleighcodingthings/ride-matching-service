@@ -38,10 +38,10 @@ class RideMatchingServiceTest {
         @Test
         @DisplayName("creates a driver with AVAILABLE status")
         void createsDriverAsAvailable() {
-            Driver driver = rideMatchingService.registerDriver("John", new Location(1.0, 2.0));
+            Driver driver = rideMatchingService.registerDriver("Alice", new Location(1.0, 2.0));
 
             assertThat(driver.getId()).isNotNull();
-            assertThat(driver.getName()).isEqualTo("John");
+            assertThat(driver.getName()).isEqualTo("Alice");
             assertThat(driver.getStatus()).isEqualTo(DriverStatus.AVAILABLE);
             assertThat(driver.getLocation().latitude()).isEqualTo(1.0);
             assertThat(driver.getLocation().longitude()).isEqualTo(2.0);
@@ -50,7 +50,7 @@ class RideMatchingServiceTest {
         @Test
         @DisplayName("persists driver in the store")
         void persistsDriver() {
-            Driver driver = rideMatchingService.registerDriver("John", new Location(1.0, 2.0));
+            Driver driver = rideMatchingService.registerDriver("Alice", new Location(1.0, 2.0));
 
             assertThat(driverStore.findById(driver.getId())).isPresent();
         }
@@ -66,12 +66,12 @@ class RideMatchingServiceTest {
         @Test
         @DisplayName("allocates the single available driver")
         void allocatesSingleDriver() {
-            rideMatchingService.registerDriver("John", new Location(1.0, 1.0));
+            rideMatchingService.registerDriver("Alice", new Location(1.0, 1.0));
             Ride ride = rideMatchingService.requestRide(new Location(1.0, 1.0));
 
             assertThat(ride).isNotNull();
             assertThat(ride.getStatus()).isEqualTo(RideStatus.ACTIVE);
-            assertThat(ride.getDriver().getName()).isEqualTo("John");
+            assertThat(ride.getDriver().getName()).isEqualTo("Alice");
         }
 
         @Test
@@ -89,7 +89,7 @@ class RideMatchingServiceTest {
         @Test
         @DisplayName("marks the allocated driver as BUSY")
         void markDriverAsBusy() {
-            Driver driver = rideMatchingService.registerDriver("John", new Location(1.0, 1.0));
+            Driver driver = rideMatchingService.registerDriver("Alice", new Location(1.0, 1.0));
             rideMatchingService.requestRide(new Location(1.0, 1.0));
 
             assertThat(driver.getStatus()).isEqualTo(DriverStatus.BUSY);
@@ -105,8 +105,8 @@ class RideMatchingServiceTest {
         @Test
         @DisplayName("throws NoDriverAvailableException when all drivers are BUSY")
         void throwsWhenAllDriversAreBusy() {
-            rideMatchingService.registerDriver("John", new Location(1.0, 1.0));
-            rideMatchingService.requestRide(new Location(1.0, 1.0)); //John is now BUSY
+            rideMatchingService.registerDriver("Alice", new Location(1.0, 1.0));
+            rideMatchingService.requestRide(new Location(1.0, 1.0)); //Alice is now BUSY
 
             assertThatThrownBy(() -> rideMatchingService.requestRide(new Location(1.0, 1.0)))
                     .isInstanceOf(NoDriverAvailableException.class);
@@ -137,7 +137,7 @@ class RideMatchingServiceTest {
         @Test
         @DisplayName("marks the ride as COMPLETED")
         void marksRideAsCompleted() {
-            rideMatchingService.registerDriver("John", new Location(1.0, 1.0));
+            rideMatchingService.registerDriver("Alice", new Location(1.0, 1.0));
             Ride ride = rideMatchingService.requestRide(new Location(1.0, 1.0));
 
             rideMatchingService.completeRide(ride.getId());
@@ -149,7 +149,7 @@ class RideMatchingServiceTest {
         @Test
         @DisplayName("releases the driver back to the available pool")
         void releasesDriverOnComplete() {
-            Driver driver = rideMatchingService.registerDriver("John", new Location(1.0, 1.0));
+            Driver driver = rideMatchingService.registerDriver("Alice", new Location(1.0, 1.0));
             Ride ride = rideMatchingService.requestRide(new Location(1.0, 1.0));
 
             assertThat(driver.getStatus()).isEqualTo(DriverStatus.BUSY);
@@ -162,13 +162,13 @@ class RideMatchingServiceTest {
         @Test
         @DisplayName("a released driver can accept a new ride")
         void releasedDriverAcceptsNewRide() {
-            Driver driver = rideMatchingService.registerDriver("John", new Location(1.0, 1.0));
+            Driver driver = rideMatchingService.registerDriver("Alice", new Location(1.0, 1.0));
             Ride ride1 = rideMatchingService.requestRide(new Location(1.0, 1.0));
             rideMatchingService.completeRide(ride1.getId());
 
             Ride ride2 = rideMatchingService.requestRide(new Location(1.0, 1.0));
             assertThat(ride2).isNotNull();
-            assertThat(ride2.getDriver().getName()).isEqualTo("John");
+            assertThat(ride2.getDriver().getName()).isEqualTo("Alice");
         }
 
         @Test
@@ -181,7 +181,7 @@ class RideMatchingServiceTest {
         @Test
         @DisplayName("throws IllegalStateException when ride is already completed")
         void throwsWhenAlreadyCompleted() {
-            rideMatchingService.registerDriver("John", new Location(1.0, 1.0));
+            rideMatchingService.registerDriver("Alice", new Location(1.0, 1.0));
             Ride ride = rideMatchingService.requestRide(new Location(1.0, 1.0));
             rideMatchingService.completeRide(ride.getId());
 
@@ -226,13 +226,13 @@ class RideMatchingServiceTest {
         @Test
         @DisplayName("excludes busy drivers from results")
         void excludesBusyDrivers(){
-            Driver busyDriver = rideMatchingService.registerDriver("Busy John", new Location(1.0, 1.0));
-            rideMatchingService.registerDriver("Free John", new Location(2.0, 2.0));
+            Driver busyDriver = rideMatchingService.registerDriver("Busy", new Location(1.0, 1.0));
+            rideMatchingService.registerDriver("Free", new Location(2.0, 2.0));
             busyDriver.tryAllocateDriver();
 
             List<Driver> drivers = rideMatchingService.getNearestAvailableDrivers(new Location(1.0, 1.0), 10);
 
-            assertThat(drivers).extracting(Driver::getName).containsExactly("Free John");
+            assertThat(drivers).extracting(Driver::getName).containsExactly("Free");
         }
 
         @Test

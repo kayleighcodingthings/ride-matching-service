@@ -61,11 +61,11 @@ public class DriverController {
      */
     @GetMapping("/nearby")
     public List<DriverResponse> getNearbyDrivers(
-            @RequestParam double lat,
-            @RequestParam double lng,
+            @RequestParam double latitude,
+            @RequestParam double longitude,
             @RequestParam @Min(1) Integer count) {
         return rideMatchingService
-                .getNearestAvailableDrivers(new Location(lat, lng), count)
+                .getNearestAvailableDrivers(new Location(latitude, longitude), count)
                 .stream()
                 .map(this::toResponse)
                 .toList();
