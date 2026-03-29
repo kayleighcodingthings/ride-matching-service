@@ -70,7 +70,7 @@ public class GlobalExceptionHandler {
                 .orElse("Constraint violation");
         ProblemDetail detail = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, message);
         detail.setType(URI.create("/errors/validation"));
-        detail.setTitle("Validation error");
+        detail.setTitle("Validation Error");
         return detail;
     }
 
@@ -79,7 +79,7 @@ public class GlobalExceptionHandler {
         ProblemDetail detail = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST,
                 "Required parameter '" + ex.getParameterName() + "' is missing");
         detail.setType(URI.create("/errors/validation"));
-        detail.setTitle("Validation error");
+        detail.setTitle("Validation Error");
         return detail;
     }
 }
