@@ -218,6 +218,8 @@ curl -s "$BASE/drivers/nearby?lat=51.505&lng=-0.125&limit=5" | jq '[.[] | {name,
 
 ## Architecture
 
+The service follows a layered architecture separating HTTP concerns, business logic, and in-memory persistence.
+
 ```
 ┌─────────────────────────────────────────┐
 │         REST Controllers                │  ← Input validation, HTTP mapping
@@ -286,3 +288,15 @@ All errors follow [RFC 7807](https://datatracker.ietf.org/doc/html/rfc7807):
 | Driver / ride not found              | `404`  |
 | Completing an already-completed ride | `409`  |
 | Missing / invalid request fields     | `400`  |
+
+---
+
+## Future Improvements
+
+While the current implementation focuses on correctness and concurrency, the following enhancements would be considered in a production environment:
+
+- Using PostgreSQL with geospatial indexing for efficient proximity queries
+- Introducing Redis to cache nearby drivers
+- Emitting ride events via Kafka for asynchronous processing
+- Using distributed locking for multi-instance deployments
+- Adding driver location streaming for real-time updates
