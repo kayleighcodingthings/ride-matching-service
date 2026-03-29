@@ -1,0 +1,94 @@
+### Base URL
+@baseUrl = http://localhost:8080
+
+### ============================
+### Request a ride
+### ============================
+
+### Request ride — should allocate nearest available driver
+POST {{baseUrl}}/rides
+Content-Type: application/json
+
+{
+  "pickupLocation": {
+    "latitude": 0.0,
+    "longitude": 0.0
+  }
+}
+
+###
+
+### Request second ride — should allocate next nearest driver
+POST {{baseUrl}}/rides
+Content-Type: application/json
+
+{
+  "pickupLocation": {
+    "latitude": 0.0,
+    "longitude": 0.0
+  }
+}
+
+###
+
+### Missing pickupLocation → expect 400
+POST {{baseUrl}}/rides
+Content-Type: application/json
+
+{}
+
+###
+
+### Missing latitude → expect 400
+POST {{baseUrl}}/rides
+Content-Type: application/json
+
+{
+  "pickupLocation": {
+    "longitude": 0.0
+  }
+}
+
+###
+
+### Missing longitude → expect 400
+POST {{baseUrl}}/rides
+Content-Type: application/json
+
+{
+  "pickupLocation": {
+    "latitude": 0.0
+  }
+}
+
+###
+
+### No drivers available → expect 503
+### (run this after all drivers are allocated)
+POST {{baseUrl}}/rides
+Content-Type: application/json
+
+{
+  "pickupLocation": {
+    "latitude": 0.0,
+    "longitude": 0.0
+  }
+}
+
+### ============================
+### Complete a ride
+### ============================
+
+### Complete a ride — replace {id} with real ride ID
+### Driver should become AVAILABLE again
+PATCH {{baseUrl}}/rides/{{rideId}}/complete
+
+###
+
+### Complete same ride again → expect 409
+PATCH {{baseUrl}}/rides/{{rideId}}/complete
+
+###
+
+### Unknown ride ID → expect 404
+PATCH {{baseUrl}}/rides/00000000-0000-0000-0000-000000000000/complete

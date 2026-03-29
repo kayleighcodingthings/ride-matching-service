@@ -1,0 +1,98 @@
+### Base URL
+@baseUrl = http://localhost:8080
+
+### ============================
+### End-to-end scenario
+### Run these in order
+### ============================
+
+### Step 1 — Register Alice near the pickup point
+POST {{baseUrl}}/drivers
+Content-Type: application/json
+
+{
+  "name": "Alice",
+  "location": {
+    "latitude": 1.0,
+    "longitude": 1.0
+  }
+}
+
+###
+
+### Step 2 — Register Bob further away
+POST {{baseUrl}}/drivers
+Content-Type: application/json
+
+{
+  "name": "Bob",
+  "location": {
+    "latitude": 10.0,
+    "longitude": 10.0
+  }
+}
+
+###
+
+### Step 3 — Check nearby drivers — Alice should appear first
+GET {{baseUrl}}/drivers/nearby?latitude=0&longitude=0&count=2
+
+###
+
+### Step 4 — Request a ride — Alice should be allocated (nearest)
+POST {{baseUrl}}/rides
+Content-Type: application/json
+
+{
+  "pickupLocation": {
+    "latitude": 0.0,
+    "longitude": 0.0
+  }
+}
+
+###
+
+### Step 5 — Check nearby again — Alice should be GONE (BUSY)
+GET {{baseUrl}}/drivers/nearby?latitude=0&longitude=0&count=2
+
+###
+
+### Step 6 — Request another ride — Bob should be allocated
+POST {{baseUrl}}/rides
+Content-Type: application/json
+
+{
+  "pickupLocation": {
+    "latitude": 0.0,
+    "longitude": 0.0
+  }
+}
+
+###
+
+### Step 7 — All drivers busy — expect 503
+POST {{baseUrl}}/rides
+Content-Type: application/json
+
+{
+  "pickupLocation": {
+    "latitude": 0.0,
+    "longitude": 0.0
+  }
+}
+
+###
+
+### Step 8 — Complete Alice's ride (replace with real ride ID from Step 4)
+### Alice should become AVAILABLE, completedAt should be set
+PATCH {{baseUrl}}/rides/{{aliceRideId}}/complete
+
+###
+
+### Step 9 — Alice is back — should reappear in nearby
+GET {{baseUrl}}/drivers/nearby?latitude=0&longitude=0&count=2
+
+###
+
+### Step 10 — Complete same ride again → expect 409
+PATCH {{baseUrl}}/rides/{{aliceRideId}}/complete

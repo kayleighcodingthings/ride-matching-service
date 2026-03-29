@@ -1,0 +1,134 @@
+### BASE URL
+@baseUrl = http://localhost:8080
+
+### ============================
+### Register a driver
+### ============================
+
+### Register Alice (near)
+POST {{baseUrl}}/drivers
+Content-Type: application/json
+
+{
+  "name": "Alice",
+  "location": {
+    "latitude": 1.0,
+    "longitude": 1.0
+  }
+}
+
+###
+
+### Register Bob (mid)
+POST {{baseUrl}}/drivers
+Content-Type: application/json
+
+{
+  "name": "Bob",
+  "location": {
+    "latitude": 50.0,
+    "longitude": 50.0
+  }
+}
+
+###
+
+### Register Charlie (far)
+POST {{baseUrl}}/drivers
+Content-Type: application/json
+
+{
+  "name": "Charlie",
+  "location": {
+    "latitude": 100.0,
+    "longitude": 100.0
+  }
+}
+
+###
+
+### Missing name → expect 400
+POST {{baseUrl}}/drivers
+Content-Type: application/json
+
+{
+  "location": {
+    "latitude": 1.0,
+    "longitude": 1.0
+  }
+}
+
+###
+
+### Missing location → expect 400
+POST {{baseUrl}}/drivers
+Content-Type: application/json
+
+{
+  "name": "Dave"
+}
+
+###
+
+### Missing latitude → expect 400
+POST {{baseUrl}}/drivers
+Content-Type: application/json
+
+{
+  "name": "Dave",
+  "location": {
+    "longitude": 1.0
+  }
+}
+
+### ============================
+### Update driver location
+### ============================
+
+### Update Alice's location — replace {id} with real driver ID
+PUT {{baseUrl}}/drivers/{{aliceId}}/location
+Content-Type: application/json
+
+{
+  "location": {
+    "latitude": 50.0,
+    "longitude": 50.0
+  },
+  "available": true
+}
+
+###
+
+### Unknown driver → expect 404
+PUT {{baseUrl}}/drivers/00000000-0000-0000-0000-000000000000/location
+Content-Type: application/json
+
+{
+  "location": {
+    "latitude": 1.0,
+    "longitude": 1.0
+  },
+  "available": true
+}
+
+### ============================
+### Nearby drivers
+### ============================
+
+### Get 3 nearest drivers — expect Alice, Bob, Charlie in order
+GET {{baseUrl}}/drivers/nearby?latitude=0&longitude=0&count=3
+
+###
+
+### Limit to 1 — expect only Alice
+GET {{baseUrl}}/drivers/nearby?latitude=0&longitude=0&count=1
+
+###
+
+### Missing count → expect 400
+GET {{baseUrl}}/drivers/nearby?latitude=0&longitude=0
+
+###
+
+### count=0 → expect 400
+GET {{baseUrl}}/drivers/nearby?latitude=0&longitude=0&count=0
