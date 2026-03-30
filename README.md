@@ -1,6 +1,6 @@
 # Ride Matching Service
 
-![Build &amp; Test](https://github.com/kayleighcodingthings/ride-matching-service/actions/workflows/build.yml/badge.svg)
+![Build &amp; Test](https://github.com/kayleighcodingthings/ride-matching-service/actions/workflows/build.yaml/badge.svg)
 
 A concurrent ride matching backend service built with **Java 21** and **Spring Boot 3**.
 
