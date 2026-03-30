@@ -71,7 +71,7 @@ The test suite includes:
 ```bash
 curl -s -X POST http://localhost:8080/drivers \
   -H "Content-Type: application/json" \
-  -d '{"name": "Alice", "latitude": 51.5074, "longitude": -0.1278}' | jq
+  -d '{"name": "Alice", "location": {"latitude": 51.5074, "longitude": -0.1278} }' | jq
 ```
 
 ```json
@@ -93,7 +93,7 @@ curl -s -X POST http://localhost:8080/drivers \
 ```bash
 curl -s -X PUT http://localhost:8080/drivers/{id}/location \
   -H "Content-Type: application/json" \
-  -d '{"latitude": 51.51, "longitude": -0.13, "available": true}' | jq
+  -d '{"location": {"latitude": 51.51, "longitude": -0.13}, "available": true}' | jq
 ```
 
 ---
@@ -103,7 +103,7 @@ curl -s -X PUT http://localhost:8080/drivers/{id}/location \
 ```bash
 curl -s -X POST http://localhost:8080/rides \
   -H "Content-Type: application/json" \
-  -d '{"pickupLatitude": 51.5080, "pickupLongitude": -0.1280}' | jq
+  -d '{"pickupLocation": {"latitude": 51.5080, "longitude": -0.1280}}' | jq
 ```
 
 ```json
@@ -165,10 +165,10 @@ curl -s -X PATCH http://localhost:8080/rides/{rideId}/complete | jq
 ### Get nearest available drivers
 
 ```bash
-curl -s "http://localhost:8080/drivers/nearby?lat=51.508&lng=-0.128&limit=3" | jq
+curl -s "http://localhost:8080/drivers/nearby?latitude=51.508&longitude=-0.128&count=3" | jq
 ```
 
-Returns up to `limit` available drivers sorted by **ascending Euclidean distance**.
+Returns up to `count` available drivers sorted by **ascending Euclidean distance**.
 
 ---
 
@@ -182,22 +182,22 @@ BASE=http://localhost:8080
 # 1. Register two drivers at different distances from our pickup point
 ALICE=$(curl -s -X POST $BASE/drivers \
   -H "Content-Type: application/json" \
-  -d '{"name":"Alice","latitude":51.50,"longitude":-0.12}' | jq -r '.id')
+  -d '{"name" :"Alice","location": {"latitude":51.50,"longitude":-0.12}}' | jq -r '.id')
 
 BOB=$(curl -s -X POST $BASE/drivers \
   -H "Content-Type: application/json" \
-  -d '{"name":"Bob","latitude":51.52,"longitude":-0.10}' | jq -r '.id')
+  -d '{"name":"Bob","location": {"latitude":51.52,"longitude":-0.10}}' | jq -r '.id')
 
 echo "Alice: $ALICE"
-echo "Bob:   $BOB"
+echo "Bob:   $BOB"  
 
 # 2. Check nearby drivers — Alice should appear first (closer to pickup)
-curl -s "$BASE/drivers/nearby?lat=51.505&lng=-0.125&limit=5" | jq '[.[] | {name, status}]'
+curl -s "$BASE/drivers/nearby?latitude=51.505&longitude=-0.125&count=5" | jq '[.[] | {name, status}]'
 
 # 3. Request a ride — should allocate Alice (nearest)
 RIDE=$(curl -s -X POST $BASE/rides \
   -H "Content-Type: application/json" \
-  -d '{"pickupLatitude":51.505,"pickupLongitude":-0.125}')
+  -d '{"pickupLocation": {"latitude": 51.505, "longitude": -0.125}}')
 
 RIDE_ID=$(echo $RIDE | jq -r '.id')
 echo "Ride created: $RIDE_ID"
@@ -206,14 +206,14 @@ echo $RIDE | jq '{driver: .driver.name, status}'
 # 4. Alice is now BUSY — a second request should allocate Bob
 RIDE2=$(curl -s -X POST $BASE/rides \
   -H "Content-Type: application/json" \
-  -d '{"pickupLatitude":51.505,"pickupLongitude":-0.125}')
+  -d '{"pickupLocation": {"latitude": 51.505, "longitude": -0.125}}')
 echo $RIDE2 | jq '{driver: .driver.name, status}'
 
 # 5. Complete the first ride — Alice returns to the pool
 curl -s -X PATCH $BASE/rides/$RIDE_ID/complete | jq '{status, completedAt}'
 
 # 6. Alice is available again
-curl -s "$BASE/drivers/nearby?lat=51.505&lng=-0.125&limit=5" | jq '[.[] | {name, status}]'
+curl -s "$BASE/drivers/nearby?latitude=51.505&longitude=-0.125&count=5" | jq '[.[] | {name, status}]'
 ```
 
 ---
@@ -280,7 +280,7 @@ All errors follow [RFC 7807](https://datatracker.ietf.org/doc/html/rfc7807):
   "type": "/errors/no-driver-available",
   "title": "No Driver Available",
   "status": 503,
-  "detail": "No drivers are currently available for pickup at Location{lat=51.5, lng=-0.12}"
+  "detail": "No drivers are currently available for pickup at Location{latitude=51.5, longitude=-0.12}"
 }
 ```
 
@@ -295,7 +295,8 @@ All errors follow [RFC 7807](https://datatracker.ietf.org/doc/html/rfc7807):
 
 ## Future Improvements
 
-While the current implementation focuses on correctness and concurrency, the following enhancements would be considered in a production environment:
+While the current implementation focuses on correctness and concurrency, the following enhancements would be considered
+in a production environment:
 
 - Using PostgreSQL with geospatial indexing for efficient proximity queries
 - Introducing Redis to cache nearby drivers
