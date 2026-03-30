@@ -26,7 +26,7 @@ git clone https://github.com/kayleighcodingthings/ride-matching-service.git
 cd ride-matching-service
 
 # Build and run
-./mvnw spring-boot:run
+mvn spring-boot:run
 ```
 
 The service starts on **http://localhost:8080**.
@@ -51,7 +51,7 @@ Replace `{{aliceId}}`, `{{rideId}}`, and `{{aliceRideId}}` with real IDs from pr
 ## Running the tests
 
 ```bash
-./mvnw test
+mvn test
 ```
 
 The test suite includes:
