@@ -14,6 +14,30 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
 
+/**
+ * Core business logic for the ride matching service.
+ *
+ * <h2>Concurrency Strategy</h2>
+ *
+ * <p>The critical section is ride allocation: we must atomically identify the
+ * nearest available driver AND mark them as busy before any other thread can
+ * grab them. We solve this without a coarse global lock by using a two-phase
+ * approach:
+ *
+ * <ol>
+ *   <li><b>Scan phase</b> — filter and sort all available drivers by distance.
+ *       This is a read-only pass on a {@code ConcurrentHashMap} snapshot; no
+ *       lock needed, and it scales with read concurrency.</li>
+ *   <li><b>Claim phase</b> — iterate the sorted candidates and call
+ *       {@link Driver#tryAllocateDriver()}, which uses {@code AtomicReference.compareAndSet}.
+ *       The first thread that CAS-wins the driver proceeds; concurrent threads that
+ *       lose the CAS skip to the next candidate. No thread ever blocks on another.</li>
+ * </ol>
+ *
+ * <p>This is a lock-free optimistic allocation loop. Under high contention the
+ * worst case is O(k) CAS retries where k is the number of competing threads, but
+ * in practice the first or second candidate is almost always unclaimed.
+ */
 @Service
 public class RideMatchingService {
     private final DriverStore driverStore;

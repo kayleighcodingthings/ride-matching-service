@@ -1,6 +1,5 @@
 package com.ecabs.ridematching.concurrent;
 
-
 import com.ecabs.ridematching.domain.DriverStatus;
 import com.ecabs.ridematching.domain.Location;
 import com.ecabs.ridematching.domain.Ride;
@@ -17,7 +16,7 @@ import java.util.*;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Concurrency tests for the ride matching service.

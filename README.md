@@ -1,5 +1,7 @@
 # Ride Matching Service
 
+![Build &amp; Test](https://github.com/kayleighcodingthings/ride-matching-service/actions/workflows/build.yml/badge.svg)
+
 A concurrent ride matching backend service built with **Java 21** and **Spring Boot 3**.
 
 Drivers register their availability, riders request a ride and are matched with the nearest available driver, and

@@ -25,6 +25,12 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+/**
+ * Tests for {@link GlobalExceptionHandler} — verifies that all exception types
+ * are mapped to the correct HTTP status and RFC 7807 ProblemDetail shape.
+ *
+ * <p>Uses both controllers to exercise every handler in a realistic context.
+ */
 @WebMvcTest({DriverController.class, RideController.class})
 @Import(GlobalExceptionHandler.class)
 @DisplayName("GlobalExceptionHandler")

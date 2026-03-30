@@ -1,12 +1,14 @@
 package com.ecabs.ridematching.controller;
 
+import com.ecabs.ridematching.controller.Dtos.DriverResponse;
+import com.ecabs.ridematching.controller.Dtos.LocationResponse;
+import com.ecabs.ridematching.controller.Dtos.RegisterDriverRequest;
+import com.ecabs.ridematching.controller.Dtos.UpdateDriverRequest;
 import com.ecabs.ridematching.domain.Driver;
 import com.ecabs.ridematching.domain.Location;
 import com.ecabs.ridematching.service.RideMatchingService;
-import com.ecabs.ridematching.controller.Dtos.*;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotNull;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -56,7 +58,7 @@ public class DriverController {
     }
 
     /**
-     * GET /drivers/nearby?lat=&lng=&count=
+     * GET /drivers/nearby?latitude=&longitude=&count=
      * Returns the nearest X available drivers, ascending by distance.
      */
     @GetMapping("/nearby")
